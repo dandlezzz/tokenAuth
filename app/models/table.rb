@@ -34,7 +34,6 @@ class Table < ActiveRecord::Base
 	def hit(user)
 		user.seat.cards << random_card
 		if bust(self.count(handify(user.seat.cards)))
-			user.seat.cards = []
 			user.seat.update(placed_bet: 0)
 			stand(user)		
 		end
@@ -71,7 +70,8 @@ class Table < ActiveRecord::Base
   end
 
 	def deal
-		self.cards = []
+		
+		self.next_hand
 		self.users.each do |user|
 			if user.seat.in_hand?
 				2.times { user.seat.cards << random_card }
